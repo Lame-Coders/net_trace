@@ -1,0 +1,9 @@
+# Ignore Node modules
+node_modules/
+
+# Ignore the actual data logs to protect privacy
+*.csv
+logs/
+
+# Ignore system files
+.DS_Store
