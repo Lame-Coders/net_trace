@@ -4,6 +4,7 @@ node_modules/
 # Ignore the actual data logs to protect privacy
 *.csv
 logs/
+ubuntu/cron_log.txt
 
 # Ignore system files
 .DS_Store
