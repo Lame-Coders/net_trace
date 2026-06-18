@@ -1,4 +1,4 @@
-package com.yourusername.nettrace // Update this to match your actual package name!
+package com.example.myapplication
 
 import java.io.InputStream
 import java.net.HttpURLConnection

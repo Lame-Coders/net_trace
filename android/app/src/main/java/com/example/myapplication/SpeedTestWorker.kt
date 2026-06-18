@@ -1,4 +1,4 @@
-package com.yourusername.nettrace // Update this!
+package com.example.myapplication
 
 import android.content.Context
 import android.os.Environment
