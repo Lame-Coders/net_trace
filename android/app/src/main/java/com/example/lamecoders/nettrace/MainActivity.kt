@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.lamecoders.nettrace
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

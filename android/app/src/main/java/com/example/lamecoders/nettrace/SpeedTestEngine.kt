@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.lamecoders.nettrace
 
 import java.io.InputStream
 import java.net.HttpURLConnection
