@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetTrace | ISP Performance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 1000px;
+            height: 500px;
+        }
+        input[type="file"] {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🚀 NetTrace Dashboard</h1>
+        <p>Upload your local CSV logs to visualize ISP performance.</p>
+    </div>
+
+    <div class="control-panel">
+        <label for="csvFileInput"><b>Select NetTrace CSV Files:</b></label><br>
+        <input type="file" id="csvFileInput" accept=".csv" multiple>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="speedChart"></canvas>
+    </div>
+
+    <script>
+        let speedChart = null;
+
+        document.getElementById('csvFileInput').addEventListener('change', function(event) {
+            const files = event.target.files;
+            if (files.length === 0) return;
+
+            let allData = [];
+            let filesProcessed = 0;
+
+            // Loop through all selected files (Ubuntu, Android, etc.)
+            for (let i = 0; i < files.length; i++) {
+                Papa.parse(files[i], {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        allData = allData.concat(results.data);
+                        filesProcessed++;
+
+                        // Once all files are read, draw the chart
+                        if (filesProcessed === files.length) {
+                            processDataAndDrawChart(allData);
+                        }
+                    }
+                });
+            }
+        });
+
+        function processDataAndDrawChart(data) {
+            // Sort data chronologically
+            data.sort((a, b) => new Date(a.Date + ' ' + a.Time) - new Date(b.Date + ' ' + b.Time));
+
+            const labels = [];
+            const downloadData = [];
+            const uploadData = [];
+            const pingData = [];
+
+            data.forEach(row => {
+                // Combine Date and Time for the X-axis
+                labels.push(`${row.Date} ${row.Time} (${row.Device})`);
+                downloadData.push(parseFloat(row.Download_Mbps));
+                uploadData.push(parseFloat(row.Upload_Mbps));
+                pingData.push(parseFloat(row.Ping_ms));
+            });
+
+            drawChart(labels, downloadData, uploadData, pingData);
+        }
+
+        function drawChart(labels, downloadData, uploadData, pingData) {
+            const ctx = document.getElementById('speedChart').getContext('2d');
+
+            // Destroy previous chart if you upload a new file
+            if (speedChart) {
+                speedChart.destroy();
+            }
+
+            speedChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Download (Mbps)',
+                            data: downloadData,
+                            borderColor: '#2563eb', // Blue
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Upload (Mbps)',
+                            data: uploadData,
+                            borderColor: '#16a34a', // Green
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Ping (ms)',
+                            data: pingData,
+                            borderColor: '#dc2626', // Red
+                            borderWidth: 2,
+                            borderDash: [5, 5], // Dashed line for ping to distinguish it
+                            tension: 0.3,
+                            fill: false,
+                            hidden: true // Hidden by default to keep the chart clean
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Speed / Latency'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
