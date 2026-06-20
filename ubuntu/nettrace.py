@@ -26,7 +26,7 @@ def run_speed_test():
     try:
         # We use a 90-second timeout so it doesn't hang forever if the internet is down
         result = subprocess.run(
-            ["fast", "--upload", "--json"],
+            ["/usr/local/bin/fast", "--upload", "--json"],
             env=env,
             capture_output=True,
             text=True,
