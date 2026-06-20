@@ -53,7 +53,13 @@
     </div>
 
     <div class="control-panel">
-        <label for="csvFileInput"><b>Select NetTrace CSV Files:</b></label><br>
+        <label for="csvFileInput" style="font-size: 1.1em;"><b>Select NetTrace CSV Files:</b></label><br>
+        
+        <div style="background-color: #eef2ff; border-left: 4px solid #4f46e5; padding: 10px; margin: 15px 0; text-align: left; font-size: 0.9em; color: #4338ca;">
+            <b>📱 Android Users:</b> Your log file is securely stored on your device. To find it, navigate to:<br>
+            <code style="background: #fff; padding: 2px 5px; border-radius: 4px; display: inline-block; margin-top: 5px; border: 1px solid #c7d2fe;">Internal Storage > Android > data > com.lamecoders.nettrace > files > Documents</code>
+        </div>
+
         <input type="file" id="csvFileInput" accept=".csv" multiple>
     </div>
 

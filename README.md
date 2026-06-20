@@ -110,6 +110,21 @@ crontab -e
 
 ---
 
+## 📂 How to Access Your Data
+
+NetTrace stores your data locally in standard `.csv` format to protect your privacy. You can upload these files to the [NetTrace Web Dashboard](https://lame-coders.github.io/net_trace/) to visualize your network stability.
+
+**💻 For Ubuntu/Linux:**
+The file `nettrace_log.csv` is located in the exact same directory where you cloned the repository and ran the setup script.
+
+**📱 For Android:**
+Due to Android's scoped storage security, the background service saves the file in the app's specific directory. To find it:
+1. Open your native Android **Files** or **File Manager** app.
+2. Navigate to: `Internal Storage > Android > data > com.lamecoders.nettrace > files > Documents`
+3. Select `nettrace_log.csv` when prompted by the web dashboard.
+
+---
+
 ## 🚀 Future Roadmap & Enhancements
 
 * **Cross-Platform Desktop Support:** Porting the Ubuntu script to native Windows (Task Scheduler) and macOS (launchd) support.
