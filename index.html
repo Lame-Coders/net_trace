@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NetTrace | ISP Performance Dashboard</title>
+    <!-- Include Chart.js library for creating charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include PapaParse library for parsing CSV files -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         body {
@@ -48,28 +50,34 @@
 <body>
 
     <div class="header">
+        <!-- Header section with title and description -->
         <h1>🚀 NetTrace Dashboard</h1>
         <p>Upload your local CSV logs to visualize ISP performance.</p>
     </div>
 
     <div class="control-panel">
+        <!-- Label for file input -->
         <label for="csvFileInput" style="font-size: 1.1em;"><b>Select NetTrace CSV Files:</b></label><br>
         
+        <!-- Information block for Android users -->
         <div style="background-color: #eef2ff; border-left: 4px solid #4f46e5; padding: 10px; margin: 15px 0; text-align: left; font-size: 0.9em; color: #4338ca;">
             <b>📱 Android Users:</b> Your log file is securely stored on your device. To find it, navigate to:<br>
             <code style="background: #fff; padding: 2px 5px; border-radius: 4px; display: inline-block; margin-top: 5px; border: 1px solid #c7d2fe;">Internal Storage > Android > data > com.lamecoders.nettrace > files > Documents</code>
         </div>
 
+        <!-- File input to upload CSV files -->
         <input type="file" id="csvFileInput" accept=".csv" multiple>
     </div>
 
     <div class="chart-container">
+        <!-- Canvas element where the chart will be rendered -->
         <canvas id="speedChart"></canvas>
     </div>
 
     <script>
         let speedChart = null;
 
+        // Event listener for file input change
         document.getElementById('csvFileInput').addEventListener('change', function(event) {
             const files = event.target.files;
             if (files.length === 0) return;
@@ -77,7 +85,8 @@
             let allData = [];
             let filesProcessed = 0;
 
-            // Loop through all selected files (Ubuntu, Android, etc.)
+
+            // Loop through all selected files and parse them using PapaParse
             for (let i = 0; i < files.length; i++) {
                 Papa.parse(files[i], {
                     header: true,
@@ -95,8 +104,10 @@
             }
         });
 
+        // Function to process data and draw the chart
         function processDataAndDrawChart(data) {
-            // Sort data chronologically
+
+            // Sort data chronologically based on Date and Time
             data.sort((a, b) => new Date(a.Date + ' ' + a.Time) - new Date(b.Date + ' ' + b.Time));
 
             const labels = [];
@@ -104,6 +115,7 @@
             const uploadData = [];
             const pingData = [];
 
+            // Extract relevant data from each row and prepare it for the chart
             data.forEach(row => {
                 // Combine Date and Time for the X-axis
                 labels.push(`${row.Date} ${row.Time} (${row.Device})`);
@@ -112,17 +124,21 @@
                 pingData.push(parseFloat(row.Ping_ms));
             });
 
+            // Draw the chart using the prepared data
             drawChart(labels, downloadData, uploadData, pingData);
         }
 
+        // Function to draw the chart using Chart.js
         function drawChart(labels, downloadData, uploadData, pingData) {
             const ctx = document.getElementById('speedChart').getContext('2d');
 
-            // Destroy previous chart if you upload a new file
+
+            // Destroy previous chart if a new file is uploaded to prevent duplication
             if (speedChart) {
                 speedChart.destroy();
             }
 
+            // Create a new Chart instance with the specified configuration
             speedChart = new Chart(ctx, {
                 type: 'line',
                 data: {
