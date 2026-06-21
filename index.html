@@ -85,7 +85,6 @@
             let allData = [];
             let filesProcessed = 0;
 
-
             // Loop through all selected files and parse them using PapaParse
             for (let i = 0; i < files.length; i++) {
                 Papa.parse(files[i], {
@@ -106,7 +105,6 @@
 
         // Function to process data and draw the chart
         function processDataAndDrawChart(data) {
-
             // Sort data chronologically based on Date and Time
             data.sort((a, b) => new Date(a.Date + ' ' + a.Time) - new Date(b.Date + ' ' + b.Time));
 
@@ -131,7 +129,6 @@
         // Function to draw the chart using Chart.js
         function drawChart(labels, downloadData, uploadData, pingData) {
             const ctx = document.getElementById('speedChart').getContext('2d');
-
 
             // Destroy previous chart if a new file is uploaded to prevent duplication
             if (speedChart) {
